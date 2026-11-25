@@ -1,0 +1,497 @@
+/* Injected into TTD pages. Prefixed and !important so the portal's own
+   Bootstrap rules can't wash these out. */
+
+.ttd-af-hover {
+  outline: 2px solid #f59e0b !important;
+  outline-offset: 1px !important;
+  cursor: crosshair !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+}
+
+.ttd-af-filled {
+  outline: 2px solid #16a34a !important;
+  outline-offset: 1px !important;
+  transition: outline-color 0.4s ease !important;
+}
+
+.ttd-af-mapped {
+  outline: 2px dashed #2563eb !important;
+  outline-offset: 1px !important;
+}
+
+.ttd-af-banner {
+  position: fixed !important;
+  top: 12px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 2147483647 !important;
+  background: #111827 !important;
+  color: #fff !important;
+  font: 500 13px/1.4 system-ui, -apple-system, sans-serif !important;
+  padding: 9px 16px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35) !important;
+  pointer-events: none !important;
+}
+
+/* Payment-outcome verdict. Deliberately large and high-contrast: it is read
+   under time pressure, and the colour alone should say "move on" vs "retry". */
+.ttd-af-verdict {
+  position: fixed !important;
+  top: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 2147483647 !important;
+  min-width: 340px !important;
+  max-width: 560px !important;
+  padding: 14px 42px 14px 18px !important;
+  border-radius: 10px !important;
+  font: 14px/1.5 system-ui, -apple-system, sans-serif !important;
+  color: #fff !important;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.4) !important;
+}
+
+.ttd-af-verdict strong {
+  display: block !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  margin-bottom: 3px !important;
+}
+
+/* Amber: no slot free right now, but holds expire — keep retrying. */
+.ttd-af-verdict.ttd-af-retry { background: #b45309 !important; }
+/* Green: server error, nothing lost — retry immediately. */
+.ttd-af-verdict.ttd-af-transient { background: #15803d !important; }
+/* Slate: session problem — retrying will not help, restart the flow. */
+.ttd-af-verdict.ttd-af-session { background: #334155 !important; }
+/* Indigo: your OWN earlier attempt is holding these pilgrims. Wait it out. */
+.ttd-af-verdict.ttd-af-self-hold { background: #4338ca !important; }
+/* Deep red: payment outcome UNKNOWN. Check Booking History before re-booking. */
+.ttd-af-verdict.ttd-af-gateway { background: #7f1d1d !important; border: 2px solid #fca5a5 !important; }
+
+.ttd-af-verdict-close {
+  position: absolute !important;
+  top: 8px !important;
+  right: 10px !important;
+  background: none !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  opacity: 0.8 !important;
+}
+
+/* Live "locked X ago" ticker on the self-hold / gateway holds. */
+.ttd-af-verdict-timer {
+  margin-top: 8px !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: 0.02em !important;
+}
+
+.ttd-af-verdict-actions {
+  margin-top: 8px !important;
+}
+
+.ttd-af-verdict-history {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  color: #fff !important;
+  font: 600 13px/1 system-ui, -apple-system, sans-serif !important;
+  padding: 7px 12px !important;
+  border-radius: 7px !important;
+  cursor: pointer !important;
+}
+
+.ttd-af-verdict-history:hover {
+  background: rgba(255, 255, 255, 0.28) !important;
+}
+
+/* "TTV" source pill on every message the extension shows, so our banners and
+   toasts are never mistaken for TTD's own system alerts. */
+.ttd-af-brand {
+  display: inline-block !important;
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #fff !important;
+  font: 700 10px/1 system-ui, -apple-system, sans-serif !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  padding: 3px 7px !important;
+  border-radius: 999px !important;
+  margin: 0 7px 6px 0 !important;
+  vertical-align: middle !important;
+}
+
+/* Queue-time readiness. Sits bottom-left so it never covers the countdown or
+   the ticket figures the user is watching. */
+.ttd-af-queue {
+  position: fixed !important;
+  bottom: 20px !important;
+  left: 20px !important;
+  z-index: 2147483646 !important;
+  max-width: 380px !important;
+  padding: 14px 40px 14px 16px !important;
+  border-radius: 10px !important;
+  color: #fff !important;
+  font: 13px/1.5 system-ui, -apple-system, sans-serif !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32) !important;
+}
+
+.ttd-af-queue strong {
+  display: block !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  margin-bottom: 3px !important;
+}
+
+.ttd-af-queue-ok { background: #15803d !important; }
+.ttd-af-queue-bad { background: #b91c1c !important; }
+
+.ttd-af-queue-close {
+  position: absolute !important;
+  top: 8px !important;
+  right: 10px !important;
+  background: none !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 19px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  opacity: 0.75 !important;
+}
+
+.ttd-af-toast {
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  z-index: 2147483647 !important;
+  background: #111827 !important;
+  color: #fff !important;
+  font: 500 13px/1.5 system-ui, -apple-system, sans-serif !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35) !important;
+  max-width: 320px !important;
+}
+
+/* A3 — optional floating "Fill" button on the TTD page. Above the toast, so
+   both can show; brand amber; high z-index so the portal can't cover it. */
+.ttd-af-float {
+  position: fixed !important;
+  bottom: 74px !important;
+  right: 20px !important;
+  z-index: 2147483646 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  background: linear-gradient(135deg, #c2620a, #a2470a) !important;
+  color: #fff !important;
+  font: 700 14px/1 system-ui, -apple-system, sans-serif !important;
+  border: none !important;
+  padding: 8px 16px 8px 8px !important;
+  border-radius: 999px !important;
+  cursor: pointer !important;
+  box-shadow: 0 8px 24px rgba(120, 53, 15, 0.4) !important;
+  transition: transform .12s ease, filter .12s ease, opacity .12s ease !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+.ttd-af-float:hover { transform: translateY(-1px) !important; filter: brightness(1.07) !important; }
+.ttd-af-float:active { transform: translateY(0) !important; }
+.ttd-af-float-mark {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #fff !important;
+  font: 800 10px/1 system-ui, -apple-system, sans-serif !important;
+  letter-spacing: .5px !important;
+  flex: none !important;
+}
+.ttd-af-float-label { white-space: nowrap !important; }
+/* Muted when the current page has no booking form to fill — still visible,
+   still clickable (it just reports "nothing to fill"), never near payment. */
+.ttd-af-float[data-active="0"] {
+  background: #64748b !important;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.28) !important;
+  opacity: .9 !important;
+}
+.ttd-af-float[data-active="0"] .ttd-af-float-mark { background: rgba(255, 255, 255, 0.28) !important; }
+
+/* v1.4 — opt-in server-synced release countdown chip. Small, dismissible,
+   bottom-left so it never sits over the form/buttons (toast/float are on the
+   right). Read-only; it never books. */
+.ttd-af-countdown {
+  position: fixed !important;
+  bottom: 20px !important;
+  left: 20px !important;
+  z-index: 2147483646 !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px 10px !important;
+  background: #141821 !important;
+  color: #ffd08a !important;
+  font: 700 15px/1 "SF Mono", Menlo, monospace !important;
+  padding: 11px 14px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,.35) !important;
+}
+.ttd-af-drift {
+  flex-basis: 100% !important;
+  font: 600 11px/1.3 system-ui, -apple-system, sans-serif !important;
+  padding: 3px 9px !important;
+  border-radius: 12px !important;
+  align-self: flex-start !important;
+}
+.ttd-af-drift.ok   { background: rgba(34, 197, 94, .22) !important;  color: #86efac !important; }
+.ttd-af-drift.fast { background: rgba(245, 158, 11, .24) !important; color: #fcd34d !important; }
+.ttd-af-drift.slow { background: rgba(239, 68, 68, .24) !important;  color: #fca5a5 !important; }
+.ttd-af-drift[hidden] { display: none !important; }
+.ttd-af-countdown.open {
+  color: #052e16 !important; background: #22c55e !important; font-weight: 800 !important;
+  animation: ttd-af-cd-pulse 1s ease-in-out infinite !important;
+}
+@keyframes ttd-af-cd-pulse {
+  0%, 100% { box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35) !important; }
+  50% { box-shadow: 0 6px 26px rgba(34, 197, 94, 0.85) !important; }
+}
+.ttd-af-countdown-close {
+  background: none !important; border: none !important; color: #8a93a5 !important;
+  font-size: 16px !important; line-height: 1 !important; cursor: pointer !important; padding: 0 !important;
+}
+
+/* v1.8 — passive "you appear logged out" warning (no network; dismissible) */
+.ttd-af-logout {
+  position: fixed !important;
+  top: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 2147483646 !important;
+  max-width: 520px !important;
+  width: calc(100% - 32px) !important;
+  padding: 13px 44px 13px 16px !important;
+  border-radius: 10px !important;
+  background: #b45309 !important;
+  color: #fff !important;
+  font: 13px/1.5 system-ui, -apple-system, sans-serif !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32) !important;
+}
+.ttd-af-logout strong {
+  display: block !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  margin-bottom: 3px !important;
+}
+.ttd-af-logout-x {
+  position: absolute !important;
+  top: 8px !important;
+  right: 10px !important;
+  background: none !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  opacity: 0.85 !important;
+  text-decoration: underline !important;
+}
+
+/* Srivari Seva slot page — read-only outline on Available (green) dates */
+.ttd-af-avail {
+  outline: 3px solid #ffd54a !important;
+  outline-offset: -3px;
+  box-shadow: 0 0 0 3px rgba(255, 213, 74, 0.5), 0 0 10px 2px rgba(1, 109, 1, 0.6) !important;
+  border-radius: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Highlight the floating "Fill" button in saffron-gold with a soft pulse when
+   the current page can actually be filled, so it draws the eye. */
+.ttd-af-float[data-active="1"] {
+  background: linear-gradient(135deg, #ffd23f, #ff9a1f) !important;
+  color: #5b1a05 !important;
+  box-shadow: 0 8px 24px rgba(255, 154, 31, .5), 0 0 0 3px rgba(255, 154, 31, .35) !important;
+  animation: ttdFloatGlow 2.1s ease-in-out infinite !important;
+}
+.ttd-af-float[data-active="1"] .ttd-af-float-mark {
+  background: rgba(91, 26, 5, .16) !important; color: #5b1a05 !important;
+}
+@keyframes ttdFloatGlow {
+  0%, 100% { box-shadow: 0 8px 24px rgba(255, 154, 31, .45), 0 0 0 3px rgba(255, 154, 31, .3) !important; }
+  50%      { box-shadow: 0 10px 32px rgba(255, 154, 31, .75), 0 0 0 3px rgba(255, 154, 31, .6) !important; }
+}
+@media (prefers-reduced-motion: reduce) { .ttd-af-float[data-active="1"] { animation: none !important; } }
+
+/* ---- Paste Helper (forms where TTD blocks programmatic fill) ---- */
+.ttd-paste-panel {
+  position: fixed !important;
+  bottom: 20px !important;
+  left: 20px !important;
+  z-index: 2147483646 !important;
+  width: 290px !important;
+  max-width: calc(100vw - 40px) !important;
+  background: #1f2430 !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  border-radius: 12px !important;
+  padding: 12px 13px !important;
+  font: 13px/1.45 system-ui, -apple-system, sans-serif !important;
+  box-shadow: 0 12px 34px rgba(0,0,0,0.45) !important;
+}
+.ttd-paste-head { display: flex !important; align-items: center !important; gap: 8px !important; margin-bottom: 7px !important; cursor: move !important; touch-action: none !important; -webkit-user-select: none !important; user-select: none !important; }
+/* The whole panel is a drag surface; interactive bits keep their own cursor. */
+.ttd-paste-panel { cursor: move !important; touch-action: none !important; -webkit-user-select: none !important; user-select: none !important; }
+.ttd-paste-grip { color: #8891a3 !important; font-size: 14px !important; line-height: 1 !important; letter-spacing: -1px !important; cursor: move !important; }
+.ttd-paste-x, .ttd-paste-row, .ttd-paste-copy { cursor: pointer !important; }
+.ttd-paste-list { cursor: default !important; }
+.ttd-paste-badge {
+  background: linear-gradient(135deg,#ffd23f,#ff9a1f) !important; color: #5b1a05 !important;
+  font: 800 10px/1 system-ui, sans-serif !important; letter-spacing: .08em !important;
+  padding: 3px 7px !important; border-radius: 999px !important;
+}
+.ttd-paste-title { font-weight: 700 !important; font-size: 13.5px !important; flex: 1 !important; }
+.ttd-paste-x {
+  background: none !important; border: none !important; color: #fff !important;
+  font-size: 18px !important; line-height: 1 !important; cursor: pointer !important; opacity: .75 !important; padding: 0 2px !important;
+}
+.ttd-paste-note { color: #b8c0cc !important; font-size: 11.5px !important; margin-bottom: 9px !important; }
+.ttd-paste-cue {
+  background: linear-gradient(135deg,#ffd23f,#ff9a1f) !important; color: #5b1a05 !important;
+  border-radius: 9px !important; padding: 9px 11px !important; font-weight: 700 !important; font-size: 13px !important;
+}
+.ttd-paste-cue.ttd-paste-pick { background: #fbeeda !important; color: #8a4b08 !important; }
+.ttd-paste-cue.ttd-paste-done { background: #17422c !important; color: #6ee7a8 !important; }
+.ttd-paste-val {
+  display: flex !important; align-items: center !important; gap: 8px !important; margin-top: 8px !important;
+}
+.ttd-paste-code {
+  flex: 1 !important; min-width: 0 !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important;
+  background: rgba(255,255,255,0.1) !important; border-radius: 6px !important; padding: 5px 8px !important;
+  font: 600 12.5px/1.3 ui-monospace, Menlo, monospace !important; color: #fff !important;
+}
+.ttd-paste-copy {
+  background: #ffd23f !important; color: #5b1a05 !important; border: none !important; border-radius: 7px !important;
+  font: 700 12px/1 system-ui, sans-serif !important; padding: 7px 11px !important; cursor: pointer !important; white-space: nowrap !important;
+}
+.ttd-paste-prog { display: flex !important; align-items: center !important; gap: 9px !important; margin-top: 11px !important; }
+.ttd-paste-bar { flex: 1 !important; height: 6px !important; background: rgba(255,255,255,0.14) !important; border-radius: 99px !important; overflow: hidden !important; }
+.ttd-paste-bar > i { display: block !important; height: 100% !important; width: 0 !important; background: linear-gradient(90deg,#ffd23f,#ff9a1f) !important; transition: width .25s ease !important; }
+.ttd-paste-count { font: 700 11.5px/1 system-ui, sans-serif !important; color: #b8c0cc !important; font-variant-numeric: tabular-nums !important; }
+
+/* Universal fallback: tap-to-copy list of every saved value (covers the
+   General-details section even when a field can't be located on the page). */
+.ttd-paste-list { margin-top: 11px !important; padding-top: 9px !important; border-top: 1px solid rgba(255,255,255,0.12) !important; max-height: 196px !important; overflow-y: auto !important; }
+.ttd-paste-list-h { color: #b8c0cc !important; font-size: 11px !important; line-height: 1.35 !important; margin-bottom: 6px !important; }
+.ttd-paste-row { display: flex !important; align-items: center !important; gap: 9px !important; width: 100% !important; box-sizing: border-box !important; text-align: left !important; background: transparent !important; border: none !important; border-radius: 6px !important; padding: 5px 7px !important; margin: 0 !important; cursor: pointer !important; color: #fff !important; }
+.ttd-paste-row:hover { background: rgba(255,255,255,0.07) !important; }
+.ttd-paste-row-lbl { flex: 0 0 72px !important; font: 600 11px/1.2 system-ui, sans-serif !important; color: #ffd27a !important; }
+.ttd-paste-row-val { flex: 1 1 auto !important; min-width: 0 !important; font: 12px/1.2 ui-monospace, Menlo, monospace !important; color: #e7ebf2 !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+.ttd-paste-row-copied { background: #17422c !important; }
+.ttd-paste-row-copied .ttd-paste-row-lbl { color: #6ee7a8 !important; }
+/* Per-row action glyph: ⌘V paste / ⌨ type / ▾ pick, color-matched to the chips. */
+.ttd-paste-rk { flex: 0 0 34px !important; text-align: center !important; font: 700 10.5px/1.3 system-ui, sans-serif !important; }
+.rk-paste { color: #ffd27a !important; }
+.rk-type { color: #8fc0ff !important; }
+.rk-pick { color: #7fdca0 !important; }
+
+/* Legend: the three actions spelled out, so Age/dropdowns clearly need a human. */
+.ttd-paste-legend { display: flex !important; flex-wrap: wrap !important; gap: 6px !important; margin: 0 0 9px !important; }
+.ttd-paste-leg { padding: 2px 8px !important; border-radius: 999px !important; font: 500 10.5px/1.5 system-ui, sans-serif !important; white-space: nowrap !important; }
+.ttd-paste-leg.leg-paste { background: #3a2f12 !important; color: #ffd27a !important; }
+.ttd-paste-leg.leg-type { background: #122840 !important; color: #8fc0ff !important; }
+.ttd-paste-leg.leg-pick { background: #123024 !important; color: #7fdca0 !important; }
+
+/* Hover tooltip: shows a field's saved value when the cursor is over it. */
+.ttd-paste-tip {
+  position: fixed !important; z-index: 2147483647 !important;
+  background: #1f2430 !important; color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.18) !important; border-radius: 7px !important;
+  padding: 5px 9px !important; font: 500 12px/1.3 ui-monospace, Menlo, monospace !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4) !important; pointer-events: none !important;
+  white-space: nowrap !important; max-width: 280px !important; overflow: hidden !important; text-overflow: ellipsis !important;
+}
+
+/* The field the helper is pointing at, and the ones already handled. */
+[data-ttd-cur="1"] {
+  outline: 2px solid #ff9a1f !important; outline-offset: 1px !important;
+  border-radius: 3px !important; background: rgba(255,210,63,0.12) !important;
+}
+[data-ttd-done="1"] { outline: 2px solid rgba(31,157,87,0.55) !important; outline-offset: 1px !important; }
+
+/* Per-field paste chip — sits on each text field; click to copy its value, then ⌘V. */
+.ttd-paste-chip {
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  height: 24px !important;
+  min-width: 36px !important;
+  padding: 0 8px !important;
+  border: none !important;
+  border-radius: 7px !important;
+  background: linear-gradient(135deg, #ffd23f, #ff9a1f) !important;
+  color: #5b1a05 !important;
+  font: 800 11px/24px system-ui, -apple-system, sans-serif !important;
+  letter-spacing: .02em !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.28) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.ttd-paste-chip:hover { filter: brightness(1.05) !important; }
+/* Age / number fields TTD blocks paste on: a blue "type this" chip showing the
+   exact digits to key in (e.g. "⌨ 34"), visually distinct from the gold ⌘V. */
+.ttd-paste-chip-type {
+  background: linear-gradient(135deg, #5aa9ff, #2f6bd8) !important;
+  color: #fff !important;
+}
+/* Dropdown fields (Gender, Photo ID Proof): a green chip naming the option to
+   choose, e.g. "▾ Aadhaar Card". Hidden once the dropdown holds a value. */
+.ttd-paste-chip-pick {
+  background: linear-gradient(135deg, #34d39e, #0f9d6b) !important;
+  color: #063d2a !important;
+  pointer-events: none !important; /* a label only — clicks fall through to the dropdown */
+}
+.ttd-paste-chip-hot { outline: 2px solid #5b1a05 !important; animation: ttdChipHot 1s ease-in-out infinite !important; }
+@keyframes ttdChipHot { 0%,100% { box-shadow: 0 2px 7px rgba(0,0,0,.28) } 50% { box-shadow: 0 0 0 4px rgba(255,154,31,.5) } }
+@media (prefers-reduced-motion: reduce) { .ttd-paste-chip-hot { animation: none !important; } }
+
+/* On-page mode chooser (the gold pill opens this). Bottom-right so it never
+   overlaps the Paste Helper (bottom-left). Reuses .ttd-paste-badge / .ttd-paste-x. */
+.ttv-chooser {
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  z-index: 2147483646 !important;
+  width: 300px !important;
+  max-width: calc(100vw - 40px) !important;
+  background: #1b1b1f !important;
+  color: #f4f3f0 !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+  font: 13px/1.45 system-ui, -apple-system, sans-serif !important;
+  box-shadow: 0 12px 34px rgba(0,0,0,0.45) !important;
+}
+.ttv-chooser-head { display: flex !important; align-items: center !important; gap: 8px !important; margin-bottom: 10px !important; }
+.ttv-chooser-title { font-weight: 700 !important; font-size: 13.5px !important; flex: 1 !important; }
+.ttv-chooser-sub { color: #b9b9c0 !important; font-size: 12.5px !important; margin-bottom: 12px !important; }
+.ttv-chooser-opt {
+  display: block !important; width: 100% !important; text-align: left !important;
+  border-radius: 10px !important; padding: 11px 13px !important; margin-bottom: 9px !important;
+  cursor: pointer !important; border: 1px solid transparent !important; font: inherit !important;
+}
+.ttv-chooser-primary { background: linear-gradient(135deg,#ffd23f,#ff9a1f) !important; }
+.ttv-chooser-primary .ttv-chooser-opt-title { color: #2a2300 !important; }
+.ttv-chooser-primary .ttv-chooser-opt-desc { color: #6b5600 !important; }
+.ttv-chooser-secondary { background: transparent !important; border-color: #3a3a42 !important; }
+.ttv-chooser-secondary .ttv-chooser-opt-title { color: #f4f3f0 !important; }
+.ttv-chooser-secondary .ttv-chooser-opt-desc { color: #9a9aa2 !important; }
+.ttv-chooser-opt-title { font-weight: 700 !important; font-size: 14.5px !important; margin-bottom: 1px !important; }
+.ttv-chooser-opt-desc { font-size: 12px !important; }
+.ttv-chooser-note { color: #8f8f97 !important; font-size: 11px !important; line-height: 1.5 !important; border-top: 1px solid #2a2a30 !important; padding-top: 9px !important; margin-top: 3px !important; }

@@ -1,0 +1,51 @@
+{
+   "action": {
+      "default_icon": {
+         "128": "src/icons/icon128.png",
+         "16": "src/icons/icon16.png",
+         "32": "src/icons/icon32.png",
+         "48": "src/icons/icon48.png"
+      },
+      "default_popup": "src/popup/popup.html",
+      "default_title": "Kolli's Tirumala Booking Helper"
+   },
+   "background": {
+      "service_worker": "src/background/service-worker.js"
+   },
+   "commands": {
+      "fill-page": {
+         "description": "Fill the current TTD booking page",
+         "suggested_key": {
+            "default": "Alt+Shift+F"
+         }
+      }
+   },
+   "content_scripts": [ {
+      "all_frames": true,
+      "css": [ "src/content/overlay.css" ],
+      "js": [ "src/common/api.js", "src/common/schema.js", "src/common/seed-mappings.js", "src/common/i18n.js", "src/content/engine.js", "src/content/picker.js", "src/content/paste-helper.js", "src/content/content.js" ],
+      "matches": [ "https://ttdevasthanams.ap.gov.in/*", "https://*.ttdevasthanams.ap.gov.in/*", "https://tirupatibalaji.ap.gov.in/*", "https://*.tirupatibalaji.ap.gov.in/*" ],
+      "run_at": "document_idle"
+   }, {
+      "js": [ "src/content/react-fill.js" ],
+      "matches": [ "https://ttdevasthanams.ap.gov.in/*", "https://*.ttdevasthanams.ap.gov.in/*" ],
+      "run_at": "document_idle",
+      "world": "MAIN"
+   } ],
+   "description": "Save your Tirumala pilgrim details once, then fill TTD booking forms in one click. 7 languages, on your device.",
+   "homepage_url": "https://www.TirumalaInfo.com",
+   "host_permissions": [ "https://ttdevasthanams.ap.gov.in/*", "https://*.ttdevasthanams.ap.gov.in/*", "https://tirupatibalaji.ap.gov.in/*", "https://*.tirupatibalaji.ap.gov.in/*" ],
+   "icons": {
+      "128": "src/icons/icon128.png",
+      "16": "src/icons/icon16.png",
+      "32": "src/icons/icon32.png",
+      "48": "src/icons/icon48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvnJiXtxVptQYY43MeLwUnOUlcosfJB//odtqZLhktD/hohwUpYLpflHeY4x2GuqTPrKzHtuyLuLXNEKkEtV6IFd5JvJ/pONsQJwSO1cGBJ3Y0pH3nt1EMg4K2JDIZK5RZWrxghni0IEJLAAvGjM5GUwHVAlr1dAYC8ddT6Z2v1MBxodqCOjcngYQAQoaxLGci4nFeDVLJ5TZ60JQU5xMUSgOMGVyQgkrDdFBSAGF0fUqrODp+107uoHuTU+TcaZPrPsJqsK172KPrpXYajsdI/vGEQmppj1wVDSpNbaDTn1zeR6hdcp+n+tNUMQuPUxOOg0KhaBtPMpBWHWxsKXa+wIDAQAB",
+   "manifest_version": 3,
+   "name": "Kolli's Tirumala Booking Helper",
+   "options_page": "src/popup/popup.html",
+   "permissions": [ "storage", "activeTab", "scripting", "clipboardWrite" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.17.0"
+}

@@ -1,0 +1,669 @@
+:root {
+  --bg: #ffffff;
+  --bg-alt: #f6f7f9;
+  --border: #e3e6ea;
+  --text: #16181d;
+  --muted: #6b7280;
+  --accent: #b45309;
+  --accent-soft: #fef3c7;
+  --ok: #16a34a;
+  --warn: #dc2626;
+  --radius: 8px;
+}
+
+:root[data-theme="dark"] {
+  --bg: #14161a;
+  --bg-alt: #1b1e24;
+  --border: #2b2f37;
+  --text: #e8eaed;
+  --muted: #9aa1ab;
+  --accent: #f59e0b;
+  --accent-soft: #3a2c11;
+}
+
+* { box-sizing: border-box; }
+
+/* "A booking was interrupted" reminder — shown when a payment was aborted/errored
+   and TTD may still be holding the pilgrim IDs. */
+.lock-note {
+  border: 1px solid var(--warn);
+  background: var(--accent-soft);
+  border-radius: var(--radius);
+  padding: 9px 11px;
+  margin-bottom: 10px;
+}
+.lock-note-body { font-size: 12px; line-height: 1.45; color: var(--text); }
+.lock-note-actions { display: flex; gap: 10px; align-items: center; margin-top: 7px; }
+.lock-note-link {
+  font-size: 12px; font-weight: 600; color: var(--warn); text-decoration: none;
+}
+.lock-note-link:hover { text-decoration: underline; }
+
+/* Standing disclaimer: TTD disabled direct autofill on their main portal, so the
+   helper works in Paste mode there. Always visible so expectations are clear. */
+.portal-note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  margin: 8px 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--text);
+}
+.portal-note .pn-ico { flex: 0 0 auto; font-size: 13px; line-height: 1.3; }
+
+/* The [hidden] attribute must always hide — several components set display via a
+   class (.rate-bar, .status, .slot-addons …) which would otherwise override the
+   UA `[hidden]{display:none}` and leave an empty box on screen. */
+[hidden] { display: none !important; }
+
+body {
+  width: 780px;
+  height: 600px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Rendered as a full page via options_page — let it breathe there. */
+@media (min-width: 900px) {
+  body { width: 100%; height: 100vh; }
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-alt);
+}
+
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+
+.mark {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 5px;
+  padding: 2px 6px;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
+
+button { font: inherit; cursor: pointer; border-radius: var(--radius); }
+
+.primary-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 7px 14px;
+  font-weight: 600;
+}
+.primary-btn:hover { filter: brightness(1.08); }
+
+/* "Fill this page" — the primary action. Highlighted in saffron-gold with a
+   gentle glow so it's the obvious thing to click. */
+#fillBtn {
+  background: linear-gradient(135deg, #ffd23f, #ff9a1f) !important;
+  color: #5b1a05 !important;
+  font-weight: 800;
+  border-radius: 8px;
+  box-shadow: 0 0 0 2px rgba(255, 154, 31, .35), 0 2px 10px rgba(255, 154, 31, .5);
+  animation: fillGlow 2.1s ease-in-out infinite;
+}
+#fillBtn:hover { filter: brightness(1.05); }
+@keyframes fillGlow {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(255, 154, 31, .35), 0 2px 10px rgba(255, 154, 31, .45); }
+  50%      { box-shadow: 0 0 0 2px rgba(255, 154, 31, .65), 0 3px 18px 3px rgba(255, 154, 31, .8); }
+}
+@media (prefers-reduced-motion: reduce) { #fillBtn { animation: none; } }
+
+.ghost-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 10px;
+}
+.ghost-btn:hover { background: var(--bg-alt); border-color: var(--muted); }
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 30px;
+  height: 30px;
+  font-size: 14px;
+}
+
+.profilebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.bar-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.profilebar select,
+.profilebar input.profile-name {
+  padding: 5px 7px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+
+.profilebar select { min-width: 150px; }
+.profilebar input.profile-name { flex: 1; min-width: 0; }
+
+.ghost-btn.danger { color: var(--warn); border-color: var(--border); }
+.ghost-btn.danger:hover { border-color: var(--warn); }
+.ghost-btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+
+.tabs { display: flex; gap: 2px; padding: 0 10px; border-bottom: 1px solid var(--border); }
+
+.tab {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  padding: 9px 12px;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  font-weight: 500;
+}
+.tab.active { color: var(--text); border-bottom-color: var(--accent); }
+
+/* Pre-flight banner. Always visible — it answers "can I book right now?"
+   without needing to scroll or think. */
+.readiness {
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+}
+
+.readiness.ready {
+  background: #dcfce7;
+  color: #14532d;
+}
+:root[data-theme="dark"] .readiness.ready {
+  background: #14311f;
+  color: #86efac;
+}
+
+.readiness.not-ready {
+  background: #fee2e2;
+  color: #7f1d1d;
+}
+:root[data-theme="dark"] .readiness.not-ready {
+  background: #3b1517;
+  color: #fecaca;
+}
+
+/* Resource link to the developer's own live-status page. A calm accent bar,
+   clearly a "while you wait" resource rather than a booking control. */
+.live-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-bottom: 1px solid var(--border);
+}
+.live-status:hover { filter: brightness(0.97); text-decoration: underline; }
+.live-status .ls-icon { font-size: 14px; }
+.live-status .ls-text { flex: 1; min-width: 0; }
+.live-status .ls-arrow { color: var(--muted); font-weight: 700; }
+
+.status {
+  padding: 8px 14px;
+  font-size: 12px;
+  background: var(--accent-soft);
+  border-bottom: 1px solid var(--border);
+}
+.status.error { background: #fee2e2; color: #7f1d1d; }
+:root[data-theme="dark"] .status.error { background: #3b1517; color: #fecaca; }
+
+.content { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 14px 20px; }
+
+.section-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin: 14px 0 6px;
+  font-weight: 600;
+}
+.section-title:first-child { margin-top: 0; }
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+
+.card-body {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 12px;
+  padding: 10px;
+}
+
+.field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+
+.field > label { font-size: 11px; color: var(--muted); }
+
+.field-row { display: flex; gap: 4px; align-items: center; }
+
+.field input[type="text"],
+.field input[type="number"],
+.field input[type="date"],
+.field input[type="tel"],
+.field input[type="email"],
+.field select {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 7px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.field input:focus, .field select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* Mapping button: shows whether this field knows where to go on the page. */
+.map-btn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  padding: 4px 7px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.map-btn.mapped { border-color: var(--ok); color: var(--ok); }
+/* Shipped selector, verified against the live portal — distinct from a user pick. */
+.map-btn.seeded { border-color: #2563eb; color: #2563eb; }
+:root[data-theme="dark"] .map-btn.seeded { border-color: #60a5fa; color: #60a5fa; }
+.map-btn:hover { background: var(--bg-alt); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+
+.chip {
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.chip button { border: none; background: none; color: var(--muted); padding: 0; line-height: 1; }
+
+.thumb {
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+}
+
+.row-actions { display: flex; gap: 6px; }
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  padding: 2px 4px;
+  font-size: 12px;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  padding: 6px 12px 6px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-alt);
+  font-size: 12px;
+}
+
+/* Advanced settings: always visible, flowing left-to-right across the wide
+   popup — compact small font + small tick-boxes so they stay on ~2 rows. */
+/* Two even columns so every option lines up (long labels wrap inside their
+   own cell instead of staggering the whole row). */
+.footer-left {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px 12px;
+  align-items: center;
+  font-size: 10px;
+}
+.footer-right { display: flex; align-items: center; justify-content: flex-start; gap: 8px; }
+.footer-spacer { flex: 1; }
+
+.check { display: flex; align-items: center; gap: 7px; color: var(--muted); line-height: 1.25; cursor: pointer; }
+.check input[type="checkbox"] { width: 13px; height: 13px; margin: 0; flex: 0 0 auto; }
+.check span { flex: 1; }
+
+/* These break to their own full-width line rather than sitting in the grid. */
+.footer-left .slot-addons,
+.footer-left .foot-report { grid-column: 1 / -1; }
+
+/* The primary "Assist my whole booking" switch — always shown, above the grid. */
+.assist-toggle {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 12px;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 8px;
+  padding: 7px 10px;
+}
+
+.save-state { color: var(--muted); min-width: 54px; text-align: right; }
+.save-state.dirty { color: var(--accent); }
+
+.empty { color: var(--muted); padding: 20px; text-align: center; }
+
+/* A field whose value the page refused — its map button is revealed. */
+.field.problem > label { color: var(--warn); font-weight: 600; }
+.field.problem input,
+.field.problem select { border-color: var(--warn); }
+
+/* A field whose stored value is present but malformed (short Aadhaar, bad age).
+   Distinct from .problem: the value is wrong, not the mapping. */
+.field.invalid > label { color: var(--warn); font-weight: 600; }
+.field.invalid input,
+.field.invalid select {
+  border-color: var(--warn);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--warn) 18%, transparent);
+}
+
+/* Compact language selector in the top bar. Uses real theme tokens so it stays
+   readable in dark mode (there is no --card variable; the old fallback painted
+   it solid white, which turned near-white dark-mode text invisible). */
+.lang-select {
+  font-size: 12px;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-alt);
+  color: var(--text);
+  cursor: pointer;
+}
+/* Some platforms render the open list from the OS; pin its colours too. */
+.lang-select option {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.mapping-toggle {
+  display: block;
+  margin: 16px auto 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.mapping-toggle:hover { color: var(--accent); }
+
+.hint {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 14px 2px 0;
+  line-height: 1.5;
+}
+
+/* B4 — first-run guide overlay. */
+.onboard {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(10, 12, 16, 0.55);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.onboard[hidden] { display: none; }
+.onboard-card {
+  background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px 22px; max-width: 360px; width: 100%;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+.onboard-card h2 { margin: 0 0 12px; font-size: 18px; }
+.onboard-steps { margin: 0 0 16px; padding-left: 20px; }
+.onboard-steps li { margin: 8px 0; font-size: 13.5px; color: var(--text); }
+.onboard-card .primary-btn { width: 100%; }
+
+/* v1.4 booking stats overlay */
+.stats-card { max-width: 400px; }
+.stats-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.stats-head h2 { margin: 0; font-size: 18px; }
+.stats-intro { color: var(--muted); font-size: 13px; margin: 4px 0 14px; }
+
+/* --- rate-us nudge --- */
+.rate-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin: 8px 12px 0; padding: 9px 12px; border-radius: 9px;
+  background: var(--accent-soft); border: 1px solid var(--accent);
+}
+.rate-msg { flex: 1; min-width: 160px; font-size: 13px; color: var(--accent); font-weight: 600; }
+.rate-actions { display: flex; gap: 7px; }
+.rate-now { background: var(--accent); color: #fff; border: none; border-radius: 7px; padding: 6px 12px; font-weight: 700; cursor: pointer; }
+.rate-now:hover { filter: brightness(1.07); }
+.rate-later { background: transparent; color: var(--muted); border: none; padding: 6px 8px; cursor: pointer; font-size: 12.5px; }
+
+/* --- preflight checklist --- */
+.pf-status { font-weight: 700; font-size: 15px; margin: 2px 0 12px; padding: 9px 12px; border-radius: 8px; }
+.pf-status.ok { background: rgba(23,105,58,.12); color: #15803d; }
+.pf-status.bad { background: rgba(179,38,30,.1); color: var(--warn); }
+.pf-group { font-weight: 700; font-size: 12.5px; color: var(--muted); margin: 12px 0 5px; text-transform: uppercase; letter-spacing: .3px; }
+.pf-row { display: flex; align-items: center; gap: 9px; padding: 3px 0; font-size: 13.5px; }
+.pf-mark { width: 18px; text-align: center; font-weight: 700; flex: none; }
+.pf-row.ok .pf-mark { color: #15803d; }
+.pf-row.bad { color: var(--warn); } .pf-row.bad .pf-mark { color: var(--warn); }
+.pf-row.warn .pf-mark { color: #b45309; }
+.pf-row.info { color: var(--muted); } .pf-row.info .pf-mark { color: var(--muted); }
+
+/* --- subset picker --- */
+.incl { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.incl-toggle { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent); }
+.card.excluded .card-body { opacity: .45; }
+.card.excluded .card-head span { opacity: .55; text-decoration: line-through; }
+.subset-hint { color: var(--accent); font-weight: 600; }
+
+/* --- per-pilgrim photo --- */
+.photo-row { display: flex; align-items: center; gap: 12px; }
+.photo-thumb {
+  width: 46px; height: 46px; border-radius: 8px; object-fit: cover;
+  border: 1px solid var(--border); flex: none; background: var(--bg-alt);
+}
+.photo-thumb.empty { display: flex; align-items: center; justify-content: center; font-size: 22px; opacity: .6; }
+.photo-actions { display: flex; align-items: center; gap: 10px; }
+
+/* --- security / encryption UI --- */
+.sec-input {
+  width: 100%; box-sizing: border-box; margin: 6px 0;
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg-alt); color: var(--text); font-size: 14px;
+}
+.sec-input:focus { outline: none; border-color: var(--accent); }
+.sec-block { width: 100%; margin-top: 8px; }
+.sec-hint { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+.sec-err, .sec-msg.err { color: var(--warn); font-size: 13px; margin: 8px 0 0; }
+.sec-msg { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+.sec-warn {
+  color: #7c2d12; background: #fff7ed; border: 1px solid #fed7aa;
+  border-radius: 8px; padding: 9px 11px; font-size: 12.5px; margin: 4px 0 12px;
+}
+.sec-state { font-weight: 700; font-size: 14px; margin: 2px 0 10px; color: var(--muted); }
+.sec-state.on { color: #15803d; }
+.sec-sub { font-weight: 700; font-size: 14px; margin: 2px 0 8px; }
+.sec-divider { height: 1px; background: var(--border); margin: 16px 0 12px; }
+.sec-actions2 { display: flex; gap: 8px; margin-top: 10px; }
+.sec-actions2 button { flex: 1; }
+:root[data-theme="dark"] .sec-warn,
+:root:not([data-theme="light"]) .sec-warn { color: #fdba74; background: #2a1a0e; border-color: #7c2d12; }
+.st-timer { background: #141821; color: #fff; border-radius: 9px; padding: 12px 14px; font: 600 14px/1.2 "SF Mono", Menlo, monospace; }
+.st-cd { background: var(--accent-soft); color: var(--accent); border-radius: 9px; padding: 10px 14px; margin-top: 8px; font-weight: 700; font-size: 14px; }
+.st-cd.open { background: #dcfce7; color: #14532d; }
+.st-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+.st-cell { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 9px; padding: 10px 12px; }
+.st-n { font: 800 20px/1 -apple-system, sans-serif; color: var(--text); }
+.st-n.ok { color: var(--ok); }
+.st-l { font-size: 10.5px; color: var(--muted); margin-top: 3px; }
+.st-recent-h { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 700; margin: 6px 0 2px; }
+.st-recent { border: 1px solid var(--border); border-radius: 9px; overflow: hidden; }
+.st-row { display: flex; align-items: center; gap: 9px; padding: 7px 11px; border-top: 1px solid var(--border); font-size: 12.5px; }
+.st-row:first-child { border-top: none; }
+.st-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.st-dot.g { background: #16a34a; } .st-dot.r { background: #dc2626; } .st-dot.a { background: #d97706; }
+.st-out { font-weight: 600; }
+.st-when { margin-left: auto; color: var(--muted); font-size: 11px; }
+.st-mark { width: 100%; margin: 14px 0 0; }
+.st-actions { display: flex; gap: 8px; margin: 8px 0 6px; }
+.st-actions button { flex: 1; }
+.st-toggle { margin: 4px 0 10px; }
+
+/* IST clock (header) + stats-panel IST */
+.ist-clock {
+  font: 700 11px/1 "SF Mono", Menlo, monospace;
+  color: #f59e0b; white-space: nowrap;
+  text-shadow: 0 0 5px rgba(245, 158, 11, .6), 0 0 11px rgba(245, 158, 11, .35);
+  animation: ist-glow 2.2s ease-in-out infinite;
+}
+.st-ist {
+  background: #141821; border: 1px solid #2a2f3a; border-radius: 9px;
+  padding: 11px 12px; margin-bottom: 8px; text-align: center;
+  font: 800 18px/1 "SF Mono", Menlo, monospace; letter-spacing: 1px;
+  color: #fbbf24;
+  text-shadow: 0 0 8px rgba(251, 191, 36, .85), 0 0 18px rgba(251, 191, 36, .5);
+  animation: ist-glow 2.2s ease-in-out infinite;
+}
+@keyframes ist-glow {
+  0%, 100% { text-shadow: 0 0 5px rgba(245, 158, 11, .5),  0 0 10px rgba(245, 158, 11, .28); }
+  50%      { text-shadow: 0 0 10px rgba(245, 158, 11, .95), 0 0 20px rgba(245, 158, 11, .6); }
+}
+@media (prefers-reduced-motion: reduce) { .ist-clock, .st-ist { animation: none; } }
+
+/* v1.7 — Slot add-ons (opt-in, paid) sub-panel under the footer toggles */
+.slot-addons {
+  margin: 4px 0 2px 24px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent-soft);
+}
+.slot-addons-help { margin: 0 0 8px; font-size: 11px; line-height: 1.45; color: var(--muted); }
+.slot-addons-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin: 5px 0; font-size: 12px;
+}
+.slot-addons-row input {
+  width: 84px; padding: 4px 6px; text-align: right;
+  border: 1px solid var(--border); border-radius: 5px;
+  background: var(--card, #fff); color: inherit; font: inherit;
+}
+.slot-addons-err { margin: 6px 0 0; font-size: 11px; color: var(--warn); }
+
+/* v1.7 — Upcoming releases strip, parsed from TTD's own Latest Updates */
+.release-sched {
+  margin: 8px 12px 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--card, #fff);
+}
+.rs-head {
+  padding: 6px 10px;
+  font-size: 11px; font-weight: 600; letter-spacing: .02em;
+  color: #fff; background: var(--accent);
+}
+.rs-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "label cd" "when cd";
+  gap: 0 8px;
+  align-items: center;
+  padding: 6px 10px;
+  border-top: 1px solid var(--border);
+}
+.rs-label { grid-area: label; font-size: 12px; font-weight: 600; line-height: 1.25;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rs-when  { grid-area: when; font-size: 11px; color: var(--muted); }
+.rs-cd    { grid-area: cd; font-size: 12px; font-weight: 700; color: var(--accent);
+  white-space: nowrap; text-align: right; }
+
+/* v1.7 — "Report a field problem" footer link */
+.foot-report { display: inline-block; margin: 0; font-size: 11px; color: var(--muted); }
+.foot-report:hover { color: var(--accent); }
+
+/* Srivari Seva volunteer profile (flow=srivari-seva) */
+.vol-bar-note { font-size: 12px; color: var(--muted); font-weight: 500; }
+.vol-intro { margin: 2px 0 8px; line-height: 1.4; }
+.vol-req > label::after { content: ''; }
+.vol-check { padding: 4px 0; }
+.vol-check .check { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+
+/* Rate nudge slides in gently a few seconds after the popup opens. */
+@keyframes rateIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.rate-bar.rate-in { animation: rateIn 0.35s ease-out; }
+@media (prefers-reduced-motion: reduce) { .rate-bar.rate-in { animation: none; } }
+
+/* Pilgrim header badges (Pilgrim 1, 2, 3 …) — gently glow to draw the eye to
+   where details go in. */
+.pilgrim-badge {
+  font-weight: 700;
+  color: var(--accent);
+  padding: 1px 9px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  animation: pilgrimGlow 2.4s ease-in-out infinite;
+}
+@keyframes pilgrimGlow {
+  0%, 100% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent), 0 0 4px 0 color-mix(in srgb, var(--accent) 25%, transparent); }
+  50%      { box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent), 0 0 11px 2px color-mix(in srgb, var(--accent) 50%, transparent); }
+}
+.card.excluded .pilgrim-badge { animation: none; box-shadow: none; background: none; }
+@media (prefers-reduced-motion: reduce) { .pilgrim-badge { animation: none; } }
+
+/* Srivari Seva Sevak selector (Group: up to 15 members) */
+.sevak-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 2px 0 10px; }
+.sevak-bar .bar-label { font-size: 12px; color: var(--muted); font-weight: 600; }
+.sevak-select { flex: 1; min-width: 150px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg); color: var(--text); }

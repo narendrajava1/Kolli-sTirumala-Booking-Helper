@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Booking summary</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; margin: 34px; color: #111; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .contact { color: #555; font-size: 13px; margin: 6px 0 16px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cbd0d6; padding: 8px 10px; text-align: left; font-size: 14px; }
+    th { background: #f3f4f6; }
+    .foot { color: #666; font-size: 12px; margin-top: 14px; }
+    .bar { margin-bottom: 18px; }
+    button { font: 600 14px system-ui; padding: 9px 18px; border-radius: 8px; border: 1px solid #b45309; background: #b45309; color: #fff; cursor: pointer; }
+    button.ghost { background: #fff; color: #b45309; }
+    @media print { .bar { display: none; } body { margin: 0; } }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <button id="printBtn">Print / Save as PDF</button>
+    <button id="closeBtn" class="ghost">Close</button>
+  </div>
+  <div id="root">Loading…</div>
+  <script src="../common/api.js"></script>
+  <script src="print.js"></script>
+</body>
+</html>

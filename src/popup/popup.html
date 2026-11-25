@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Kolli's Tirumala Booking Helper</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark" title="Tirumala Tirupati Vlogs">TTV</span>
+      <span id="brandName" data-i18n="app.name">Kolli's Tirumala Booking Helper</span>
+    </div>
+    <div class="topbar-actions">
+      <span id="istClock" class="ist-clock" title="Indian Standard Time (from your device clock)"></span>
+      <select id="langSelect" class="lang-select" title="Language / భాష / भाषा"></select>
+      <button id="statsBtn" class="icon-btn" title="Booking stats">📊</button>
+      <button id="securityBtn" class="icon-btn" title="Security">🔒</button>
+      <button id="themeBtn" class="icon-btn" title="Toggle theme">◐</button>
+      <button id="previewBtn" class="ghost-btn" data-i18n="btn.health" title="Check that every field still matches TTD's current form">Test this page</button>
+      <button id="fillBtn" class="primary-btn" data-i18n="btn.fill">Fill this page</button>
+    </div>
+  </header>
+
+  <div class="profilebar" id="profilebar"></div>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <div id="readiness" class="readiness"></div>
+
+  <a id="liveStatus" class="live-status"
+     href="https://tirumalainfo.com/tirumala-live-status.php"
+     target="_blank" rel="noopener noreferrer"
+     title="Opens tirumalainfo.com in a new tab">
+    <span class="ls-icon">🛕</span>
+    <span class="ls-text" data-i18n="live.label">Live Tirumala status — queue, SSD tokens, rooms</span>
+    <span class="ls-arrow">↗</span>
+  </a>
+
+  <div class="portal-note" id="portalNote">
+    <span class="pn-ico" aria-hidden="true">ℹ️</span>
+    <span data-i18n="disclaimer.autofill">TTD turned off one-click autofill on their main booking site. This helper now copies your saved details so you paste them in (⌘/Ctrl+V), and guides Age and the dropdowns. Full autofill still works on the SRIVANI donation site.</span>
+  </div>
+
+  <div id="status" class="status" hidden></div>
+
+  <div id="rateBar" class="rate-bar" hidden>
+    <span id="rateMsg" class="rate-msg">Enjoying the helper? A quick rating helps other devotees find it. 🙏</span>
+    <span class="rate-actions">
+      <button id="rateNow" class="rate-now">Rate ⭐</button>
+      <button id="rateLater" class="rate-later">Later</button>
+    </span>
+  </div>
+
+  <div id="fillNudge" class="rate-bar" hidden>
+    <span id="fillNudgeMsg" class="rate-msg"></span>
+    <span class="rate-actions">
+      <button id="fillNudgeYes" class="rate-later">👍 Yes</button>
+      <button id="fillNudgeNo" class="rate-now">👎 Report</button>
+    </span>
+  </div>
+
+  <main id="content" class="content"></main>
+
+  <footer class="footer">
+    <label class="check assist-toggle" hidden title="One switch that turns on auto-fill, auto-continue and the on-page helper button together. It runs the helper up to the review page and NEVER touches Pay Now — the payment is always yours. On TTD's main portal the helper works by paste, not direct fill.">
+      <input type="checkbox" id="assistMode">
+      <span data-i18n="foot.assist">Assist my whole booking (fills up to payment)</span>
+    </label>
+
+    <!-- Advanced settings, always visible but COMPACT: a small-font 2-column
+         grid with small tick-boxes, so the form still keeps the popup's height. -->
+    <div class="footer-left">
+      <label class="check">
+        <input type="checkbox" id="propagateAddress">
+        <span data-i18n="foot.shared">Use shared contact details for all pilgrims</span>
+      </label>
+      <label class="check" hidden title="Advances to the review page after filling. Never clicks Pay Now.">
+        <input type="checkbox" id="autoContinue">
+        <span data-i18n="foot.continue">Continue to review after filling</span>
+      </label>
+      <label class="check" title="Starts the helper automatically when a booking page opens, without opening this popup — it fills on SRIVANI, opens the Paste Helper on TTD's main portal. Only ever fills or pastes — never Pay Now.">
+        <input type="checkbox" id="autoFillOnLoad">
+        <span data-i18n="foot.autofill">Auto-fill this page the moment it opens</span>
+      </label>
+      <label class="check" title="Shows the helper button on the TTD page, so you can use it without opening this popup — Fill Details on SRIVANI, Open Paste Helper on the main portal. Never appears on payment pages.">
+        <input type="checkbox" id="floatingButton">
+        <span data-i18n="foot.floating">Show a Fill button on the TTD page</span>
+      </label>
+      <label class="check" title="When the captcha appears, scroll to it and place the cursor in the box. It never reads or solves the captcha — you always type it yourself.">
+        <input type="checkbox" id="captchaFocus">
+        <span data-i18n="foot.captcha">Jump to the captcha box when it appears</span>
+      </label>
+      <label class="check" title="If you appear to be logged out of the TTD site, show a reminder to log in — so you are not caught out when a booking window opens. Reads the page only; makes no network request.">
+        <input type="checkbox" id="logoutWarn">
+        <span data-i18n="foot.logoutWarn">Warn me if I'm logged out of TTD</span>
+      </label>
+      <label class="check" title="On TTD's main booking site, fill the form directly (Chrome). Whatever can't be filled this way — custom dropdowns like Gender/Photo ID — falls back to the Paste Helper. Turn off to use pure paste-assist if a TTD update ever makes direct fill misbehave.">
+        <input type="checkbox" id="reactFill">
+        <span data-i18n="foot.reactFill">Fill the main TTD form directly (with paste fallback)</span>
+      </label>
+      <label class="check" hidden title="Optional PAID add-ons on the slot page. Off by default. Laddus cost ₹50 each and hundi is a donation — when on, your values are filled but the extension never continues past the slot page, so you always see the total before paying.">
+        <input type="checkbox" id="slotAddOns">
+        <span data-i18n="settings.slotAddOns">Slot add-ons (laddus &amp; hundi)</span>
+      </label>
+      <div id="slotAddOnsPanel" class="slot-addons" hidden>
+        <p class="slot-addons-help" data-i18n="settings.slotAddOns.help">Optional, and OFF by default. These cost money — laddus are ₹50 each and hundi is a donation. When on, your values are filled on the slot page; the extension never continues past it, so you always see the total before paying.</p>
+        <label class="slot-addons-row">
+          <span data-i18n="settings.slotAddOns.laddus">Additional laddus</span>
+          <input type="tel" inputmode="numeric" id="slotLaddus" maxlength="2" placeholder="0">
+        </label>
+        <label class="slot-addons-row">
+          <span data-i18n="settings.slotAddOns.hundi">Hundi offering (₹)</span>
+          <input type="tel" inputmode="numeric" id="slotHundi" maxlength="7" placeholder="0">
+        </label>
+        <p id="slotAddOnsErr" class="slot-addons-err" hidden></p>
+      </div>
+    </div>
+
+    <div class="footer-right">
+      <button id="howItWorks" type="button" class="link-btn foot-report" data-i18n="onboard.reopen">How it works</button>
+      <button id="reportField" type="button" class="link-btn foot-report" title="Copies this TTD form's field structure (no personal data) so you can send it to us if something isn't filling." data-i18n="report.link">Report a field problem</button>
+      <span class="footer-spacer"></span>
+      <button id="exportBtn" class="ghost-btn" data-i18n="btn.export">Export</button>
+      <button id="importBtn" class="ghost-btn" data-i18n="btn.import">Import</button>
+      <input type="file" id="importFile" accept="application/json" hidden>
+      <span id="saveState" class="save-state" data-i18n="save.saved">Saved</span>
+    </div>
+  </footer>
+
+  <!-- v1.4 booking stats overlay (opt-in, local only) -->
+  <div id="stats" class="onboard" hidden>
+    <div class="onboard-card stats-card">
+      <div class="stats-head">
+        <h2 id="statsTitle">Booking stats</h2>
+        <button id="statsClose" class="icon-btn" title="Close">×</button>
+      </div>
+      <div id="statsBody"></div>
+    </div>
+  </div>
+
+  <!-- Unlock gate — shown over everything when the vault is locked -->
+  <div id="unlock" class="onboard" hidden>
+    <div class="onboard-card">
+      <h2 id="unlockTitle">🔒 Locked</h2>
+      <p id="unlockDesc" class="stats-intro"></p>
+      <input type="password" id="unlockPass" class="sec-input" autocomplete="off" spellcheck="false">
+      <p id="unlockHint" class="sec-hint" hidden></p>
+      <p id="unlockErr" class="sec-err" hidden></p>
+      <button id="unlockBtn" class="primary-btn sec-block"></button>
+    </div>
+  </div>
+
+  <!-- Preflight checklist (opened from the readiness banner) -->
+  <div id="preflight" class="onboard" hidden>
+    <div class="onboard-card stats-card">
+      <div class="stats-head">
+        <h2 id="preflightTitle">Preflight checklist</h2>
+        <button id="preflightClose" class="icon-btn" title="Close">×</button>
+      </div>
+      <div id="preflightBody"></div>
+    </div>
+  </div>
+
+  <!-- Security panel (encryption + encrypted backup) -->
+  <div id="security" class="onboard" hidden>
+    <div class="onboard-card stats-card">
+      <div class="stats-head">
+        <h2 id="securityTitle">Security</h2>
+        <button id="securityClose" class="icon-btn" title="Close">×</button>
+      </div>
+      <div id="securityBody"></div>
+    </div>
+  </div>
+
+  <!-- B4 first-run guide: shown once, until dismissed -->
+  <div id="onboard" class="onboard" hidden>
+    <div class="onboard-card">
+      <h2 id="onboardTitle">Welcome 🙏</h2>
+      <ol class="onboard-steps">
+        <li id="onboardStep1"></li>
+        <li id="onboardStep2"></li>
+        <li id="onboardStep3"></li>
+      </ol>
+      <button id="onboardGot" class="primary-btn">Got it</button>
+    </div>
+  </div>
+
+  <script src="../common/api.js"></script>
+  <script src="../common/schema.js"></script>
+  <script src="../common/seed-mappings.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/crypto.js"></script>
+  <script src="../common/storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
