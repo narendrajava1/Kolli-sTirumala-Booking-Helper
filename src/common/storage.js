@@ -222,9 +222,65 @@ function writePath(obj, path, value) {
 
 // ------------------------------------------------------------- backup / load
 
+function mergeMappings(existing, incoming) {
+  const result = { ...(existing || {}) };
+  for (const [flow, fields] of Object.entries(incoming || {})) {
+    result[flow] = { ...(result[flow] || {}), ...(fields || {}) };
+  }
+  return result;
+}
+
+function mergeStores(existing, incoming) {
+  const oldStore = migrateStore(existing);
+  const importedStore = migrateStore(incoming);
+  const profiles = [...oldStore.profiles];
+  const ids = new Set(profiles.map((p) => p.id));
+
+  for (const imported of importedStore.profiles) {
+    const index = profiles.findIndex((p) => p.id === imported.id);
+    if (index >= 0) {
+      profiles[index] = structuredClone(imported);
+    } else {
+      const copy = structuredClone(imported);
+      if (!copy.id || ids.has(copy.id)) copy.id = uid();
+      ids.add(copy.id);
+      profiles.push(copy);
+    }
+  }
+
+  const volunteers = [...(oldStore.volunteers || [])];
+  const volunteerIds = new Set(volunteers.map((v) => v.id));
+  for (const imported of (importedStore.volunteers || [])) {
+    const index = volunteers.findIndex((v) => v.id === imported.id);
+    if (index >= 0) {
+      volunteers[index] = structuredClone(imported);
+    } else {
+      const copy = structuredClone(imported);
+      if (!copy.id || volunteerIds.has(copy.id)) copy.id = uid();
+      volunteerIds.add(copy.id);
+      volunteers.push(copy);
+    }
+  }
+
+  const active = profiles.find((p) => p.id === oldStore.activeProfileId)
+    ? oldStore.activeProfileId
+    : profiles[0]?.id;
+
+  return {
+    ...oldStore,
+    ...importedStore,
+    profiles,
+    volunteers,
+    activeProfileId: active,
+    settings: { ...oldStore.settings, ...(importedStore.settings || {}) },
+  };
+}
+
 async function exportAll() {
-  const { profile, mappings } = await api.storage.local.get([KEYS.STORE, KEYS.MAPPINGS]);
-  return JSON.stringify({ profile, mappings, exportedAt: new Date().toISOString() }, null, 2);
+  const profile = await getStore();
+  if (profile == null) throw new Error('locked');
+  const { [KEYS.MAPPINGS]: mappings } = await api.storage.local.get(KEYS.MAPPINGS);
+  return JSON.stringify({ profile, mappings: mappings || {}, exportedAt: new Date().toISOString() }, null, 2);
 }
 
 async function importAll(json) {
@@ -233,14 +289,18 @@ async function importAll(json) {
     throw new Error('This is an encrypted backup — use "Import encrypted" and enter its passphrase.');
   }
   if (!parsed.profile) throw new Error('File does not contain any profiles.');
-  const store = migrateStore(parsed.profile);  // older backups load fine
+  const importedStore = migrateStore(parsed.profile); // older backups load fine
+  const existingStore = await getStore();
+  if (existingStore == null) throw new Error('locked');
+  const store = mergeStores(existingStore, importedStore);
   if (await isEncrypted()) {
     if (!(await isUnlocked())) throw new Error('locked');
     await saveStore(store); // keep it encrypted at rest
   } else {
     await api.storage.local.set({ [KEYS.STORE]: store });
   }
-  await api.storage.local.set({ [KEYS.MAPPINGS]: parsed.mappings || {} });
+  const { [KEYS.MAPPINGS]: existingMappings } = await api.storage.local.get(KEYS.MAPPINGS);
+  await api.storage.local.set({ [KEYS.MAPPINGS]: mergeMappings(existingMappings, parsed.mappings) });
 }
 
 /** A passphrase-encrypted backup file: nothing readable without the passphrase.
@@ -263,14 +323,18 @@ async function importEncrypted(json, passphrase) {
   try { payload = await CRYPTOBOX.decryptObject(parsed, passphrase); }
   catch { throw new Error('Wrong passphrase for this backup.'); }
   if (!payload.profile) throw new Error('Backup contains no profiles.');
-  const store = migrateStore(payload.profile);
+  const importedStore = migrateStore(payload.profile);
+  const existingStore = await getStore();
+  if (existingStore == null) throw new Error('locked');
+  const store = mergeStores(existingStore, importedStore);
   if (await isEncrypted()) {
     if (!(await isUnlocked())) throw new Error('locked');
     await saveStore(store);
   } else {
     await api.storage.local.set({ [KEYS.STORE]: store });
   }
-  await api.storage.local.set({ [KEYS.MAPPINGS]: payload.mappings || {} });
+  const { [KEYS.MAPPINGS]: existingMappings } = await api.storage.local.get(KEYS.MAPPINGS);
+  await api.storage.local.set({ [KEYS.MAPPINGS]: mergeMappings(existingMappings, payload.mappings) });
 }
 
 

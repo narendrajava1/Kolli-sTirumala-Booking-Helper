@@ -218,25 +218,6 @@ button { font: inherit; cursor: pointer; border-radius: var(--radius); }
   color: #fecaca;
 }
 
-/* Resource link to the developer's own live-status page. A calm accent bar,
-   clearly a "while you wait" resource rather than a booking control. */
-.live-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  text-decoration: none;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border-bottom: 1px solid var(--border);
-}
-.live-status:hover { filter: brightness(0.97); text-decoration: underline; }
-.live-status .ls-icon { font-size: 14px; }
-.live-status .ls-text { flex: 1; min-width: 0; }
-.live-status .ls-arrow { color: var(--muted); font-weight: 700; }
-
 .status {
   padding: 8px 14px;
   font-size: 12px;
